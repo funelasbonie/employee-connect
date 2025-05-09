@@ -162,21 +162,22 @@ function App() {
     if (!formData) return null;
 
     return (
-      <div className="generated-form">
-        <h2>Generated Form</h2>
+      <div className="generated-form card shadow-sm p-4 mb-4">
+        <h2 className="mb-4">Generated Form</h2>
         <form onSubmit={handleFormSubmit}>
           {formData.Form.Field.map((field) => {
             if (!field.Visible) return null;
 
             return (
-              <div className="form-field" key={field.Id}>
-                <label>
-                  {field.Label} {field.Mandatory && <span className="required">*</span>}
+              <div className="mb-3" key={field.Id}>
+                <label className="form-label">
+                  {field.Label} {field.Mandatory && <span className="text-danger">*</span>}
                 </label>
                 
                 {field.Type === 'Text' && (
                   <input 
-                    type="text" 
+                    type="text"
+                    className="form-control"
                     required={field.Mandatory}
                     disabled={field.DisplayOnly}
                     title={field.Comment}
@@ -187,7 +188,8 @@ function App() {
                 
                 {field.Type === 'Number' && (
                   <input 
-                    type="number" 
+                    type="number"
+                    className="form-control"
                     required={field.Mandatory}
                     disabled={field.DisplayOnly}
                     title={field.Comment}
@@ -198,6 +200,8 @@ function App() {
                 
                 {field.Type === 'Textarea' && (
                   <textarea
+                    className="form-control"
+                    rows={4}
                     required={field.Mandatory}
                     disabled={field.DisplayOnly}
                     title={field.Comment}
@@ -208,6 +212,7 @@ function App() {
                 
                 {field.Type === 'Dropdown' && (
                   <select
+                    className="form-select"
                     required={field.Mandatory}
                     disabled={field.DisplayOnly}
                     title={field.Comment}
@@ -224,13 +229,13 @@ function App() {
                 )}
                 
                 {field.Comment && (
-                  <div className="field-comment">{field.Comment}</div>
+                  <div className="form-text text-muted mt-1">{field.Comment}</div>
                 )}
               </div>
             );
           })}
           {formData.Form.Field.some(field => field.Visible) && (
-            <button type="submit">Submit</button>
+            <button type="submit" className="btn btn-primary mt-3">Submit</button>
           )}
         </form>
       </div>
@@ -238,24 +243,35 @@ function App() {
   };
 
   return (
-    <div className="App">
-      <h1>XML Form Generator</h1>
-      
-      <div className="upload-section">
-        <h2>Upload XML File</h2>
-        <input 
-          type="file" 
-          accept=".xml"
-          onChange={handleFileUpload}
-        />
-        <button onClick={parseXml} disabled={!xmlContent}>
-          Generate Form
-        </button>
-        
-        {error && <div className="error-message">{error}</div>}
+    <div className="container-fluid py-4">
+      <div className="row">
+        <div className="col-12 col-md-10 col-lg-6 form-container">
+          <h1 className="mb-4 left-aligned-heading">XML Form Generator</h1>
+          
+          <div className="card shadow-sm p-4 mb-4">
+            <h2 className="mb-3">Upload XML File</h2>
+            <div className="mb-3">
+              <input 
+                type="file" 
+                className="form-control"
+                accept=".xml"
+                onChange={handleFileUpload}
+              />
+            </div>
+            <button 
+              onClick={parseXml} 
+              disabled={!xmlContent}
+              className="btn btn-success"
+            >
+              Generate Form
+            </button>
+            
+            {error && <div className="alert alert-danger mt-3">{error}</div>}
+          </div>
+          
+          {renderForm()}
+        </div>
       </div>
-      
-      {renderForm()}
     </div>
   );
 }
